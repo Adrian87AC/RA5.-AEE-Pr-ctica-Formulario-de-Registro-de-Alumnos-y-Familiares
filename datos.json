@@ -1,0 +1,157 @@
+{
+    "lenguas": [
+        "Español",
+        "Catalán",
+        "Gallego",
+        "Euskera",
+        "Inglés",
+        "Francés",
+        "Alemán",
+        "Italiano",
+        "Portugués"
+    ],
+    "idiomas": [
+        "Español",
+        "Inglés",
+        "Francés",
+        "Alemán",
+        "Italiano",
+        "Portugués",
+        "Chino",
+        "Japonés",
+        "Árabe",
+        "Ruso"
+    ],
+    "profesiones": [
+        "Médico/a",
+        "Ingeniero/a",
+        "Profesor/a",
+        "Abogado/a",
+        "Arquitecto/a",
+        "Comerciante",
+        "Empresario/a",
+        "Funcionario/a",
+        "Enfermero/a",
+        "Informático/a",
+        "Otro"
+    ],
+    "nivelesEstudio": [
+        "Educación Infantil",
+        "Educación Primaria",
+        "ESO",
+        "Bachillerato",
+        "Formación Profesional Grado Medio",
+        "Formación Profesional Grado Superior",
+        "Universidad",
+        "Máster",
+        "Doctorado"
+    ],
+    "alergias": [
+        "Polen",
+        "Ácaros",
+        "Frutos secos",
+        "Lactosa",
+        "Gluten",
+        "Mariscos",
+        "Penicilina",
+        "Picaduras de insectos",
+        "Ninguna"
+    ],
+    "paises": [
+        {
+            "nombre": "España",
+            "ciudades": [
+                {
+                    "nombre": "Madrid",
+                    "poblaciones": [
+                        "Madrid",
+                        "Alcalá de Henares",
+                        "Getafe",
+                        "Móstoles",
+                        "Fuenlabrada"
+                    ]
+                },
+                {
+                    "nombre": "Barcelona",
+                    "poblaciones": [
+                        "Barcelona",
+                        "Hospitalet de Llobregat",
+                        "Badalona",
+                        "Terrassa",
+                        "Sabadell"
+                    ]
+                },
+                {
+                    "nombre": "Sevilla",
+                    "poblaciones": [
+                        "Sevilla",
+                        "Dos Hermanas",
+                        "Alcalá de Guadaíra",
+                        "Utrera",
+                        "Écija"
+                    ]
+                },
+                {
+                    "nombre": "Valencia",
+                    "poblaciones": [
+                        "Valencia",
+                        "Torrent",
+                        "Gandía",
+                        "Paterna",
+                        "Sagunto"
+                    ]
+                }
+            ]
+        },
+        {
+            "nombre": "Francia",
+            "ciudades": [
+                {
+                    "nombre": "París",
+                    "poblaciones": [
+                        "París",
+                        "Versalles",
+                        "Boulogne-Billancourt",
+                        "Saint-Denis",
+                        "Nanterre"
+                    ]
+                },
+                {
+                    "nombre": "Lyon",
+                    "poblaciones": [
+                        "Lyon",
+                        "Villeurbanne",
+                        "Vénissieux",
+                        "Caluire-et-Cuire",
+                        "Bron"
+                    ]
+                }
+            ]
+        },
+        {
+            "nombre": "Italia",
+            "ciudades": [
+                {
+                    "nombre": "Roma",
+                    "poblaciones": [
+                        "Roma",
+                        "Fiumicino",
+                        "Guidonia",
+                        "Pomezia",
+                        "Tivoli"
+                    ]
+                },
+                {
+                    "nombre": "Milán",
+                    "poblaciones": [
+                        "Milán",
+                        "Sesto San Giovanni",
+                        "Cinisello Balsamo",
+                        "Monza",
+                        "Bergamo"
+                    ]
+                }
+            ]
+        }
+    ]
+}
