@@ -11,6 +11,16 @@ const PORT = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
+// Servir archivos estáticos del frontend (Usando ruta absoluta para evitar fallos)
+const frontendPath = path.resolve(__dirname, '..', 'frontend');
+console.log('📂 Sirviendo archivos estáticos desde:', frontendPath);
+app.use(express.static(frontendPath));
+
+// Ruta raíz explícita para evitar errores de navegación
+app.get('/', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
 // Rutas de datos
 const DATA_FILE = path.join(__dirname, 'data', 'datos.json');
 const REGISTROS_FILE = path.join(__dirname, 'data', 'registros.json');
@@ -57,4 +67,9 @@ app.post('/api/alumno', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
+
+    // Intentar abrir el navegador automáticamente en Windows
+    if (process.platform === 'win32') {
+        require('child_process').exec(`start http://localhost:${PORT}`);
+    }
 });

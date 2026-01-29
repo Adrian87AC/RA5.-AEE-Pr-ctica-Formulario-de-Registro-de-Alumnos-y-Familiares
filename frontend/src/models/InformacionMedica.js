@@ -1,6 +1,7 @@
-export class InformacionMedica {
-    constructor() {
-        this.alergias = [];
-        this.medicacionActual = '';
-    }
+/**
+ * Constructor de InformacionMedica usando Prototipos
+ */
+export function InformacionMedica() {
+    this.alergias = [];
+    this.medicacionActual = '';
 }

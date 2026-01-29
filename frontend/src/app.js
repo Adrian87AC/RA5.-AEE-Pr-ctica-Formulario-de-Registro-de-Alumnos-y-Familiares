@@ -61,17 +61,30 @@ class App {
     cargarCiudades() {
         const pais = document.getElementById('pais').value;
         const selectCiudad = document.getElementById('ciudad');
-        const ciudades = this.dataService.getCiudadesPorPais(pais);
+        const selectPoblacion = document.getElementById('poblacion');
 
+        if (!pais) {
+            selectCiudad.innerHTML = '<option value="">Primero selecciona un país</option>';
+            selectPoblacion.innerHTML = '<option value="">Primero selecciona una ciudad</option>';
+            return;
+        }
+
+        const ciudades = this.dataService.getCiudadesPorPais(pais);
         this.dataService.cargarOpciones('ciudad', ciudades.map(c => c.nombre));
-        document.getElementById('poblacion').innerHTML = '<option value="">Primero selecciona una ciudad</option>';
+        selectPoblacion.innerHTML = '<option value="">Primero selecciona una ciudad</option>';
     }
 
     cargarPoblaciones() {
         const pais = document.getElementById('pais').value;
         const ciudad = document.getElementById('ciudad').value;
-        const poblaciones = this.dataService.getPoblacionesPorCiudad(pais, ciudad);
+        const selectPoblacion = document.getElementById('poblacion');
 
+        if (!ciudad) {
+            selectPoblacion.innerHTML = '<option value="">Primero selecciona una ciudad</option>';
+            return;
+        }
+
+        const poblaciones = this.dataService.getPoblacionesPorCiudad(pais, ciudad);
         this.dataService.cargarOpciones('poblacion', poblaciones);
     }
 
@@ -263,20 +276,46 @@ class App {
 
     mostrarResumenModal(alumno) {
         let html = `
-            <div class="resumen-section">
-                <h5>📋 Datos del Alumno</h5>
-                <p><strong>Nombre:</strong> ${alumno.nombre} ${alumno.apellidos}</p>
-                <p><strong>NIF:</strong> ${alumno.nif}</p>
-            </div>
-            <div class="resumen-section">
-                <h5>👨‍👩‍👧‍👦 Familiares (${alumno.familiares.length})</h5>
-                ${alumno.familiares.map(f => `
-                    <p class="small"><strong>${f.nombre} ${f.apellidos}</strong> - ${f.profesion}</p>
-                `).join('')}
-            </div>
-            <div class="resumen-section">
-                <h5>📍 Dirección</h5>
-                <p>${alumno.direccion.direccionCompleta}, ${alumno.direccion.poblacion}</p>
+            <div class="resumen-container">
+                <div class="alert alert-info py-2"><i class="fas fa-user-graduate"></i> <strong>1. Datos del Alumno</strong></div>
+                <div class="ps-3 mb-3">
+                    <p class="mb-1"><strong>Nombre Completo:</strong> ${alumno.nombre} ${alumno.apellidos}</p>
+                    <p class="mb-1"><strong>NIF:</strong> ${alumno.nif}</p>
+                    <p class="mb-1"><strong>Lengua Materna:</strong> ${alumno.lenguaMaterna}</p>
+                    <p class="mb-1"><strong>Idiomas:</strong> ${alumno.idiomasConocidos.join(', ')}</p>
+                </div>
+
+                <div class="alert alert-success py-2"><i class="fas fa-users"></i> <strong>2. Familiares Asociados</strong></div>
+                <div class="ps-3 mb-3">
+                    ${alumno.familiares.map((f, i) => `
+                        <div class="border-start ps-2 mb-2">
+                            <p class="mb-0 fw-bold text-success">Familiar ${i + 1}: ${f.nombre} ${f.apellidos}</p>
+                            <p class="small mb-0">NIF: ${f.nif} | Profesión: ${f.profesion}</p>
+                            <p class="small mb-0">Origen: ${f.ciudadNacimiento} | Lengua: ${f.lenguaMaterna}</p>
+                            <p class="small">Idiomas: ${f.idiomasConocidos.join(', ')}</p>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="alert alert-primary py-2"><i class="fas fa-map-marker-alt"></i> <strong>3. Dirección</strong></div>
+                <div class="ps-3 mb-3">
+                    <p class="mb-1"><strong>Ubicación:</strong> ${alumno.direccion.pais} > ${alumno.direccion.ciudad} > ${alumno.direccion.poblacion}</p>
+                    <p class="mb-1"><strong>Dirección:</strong> ${alumno.direccion.direccionCompleta} (CP: ${alumno.direccion.codigoPostal})</p>
+                </div>
+
+                <div class="alert alert-warning py-2 text-dark"><i class="fas fa-graduation-cap"></i> <strong>4. Datos Académicos</strong></div>
+                <div class="ps-3 mb-3">
+                    <p class="mb-1"><strong>Procedencia:</strong> ${alumno.datosAcademicos.colegioProcedencia}</p>
+                    <p class="mb-1"><strong>Nivel Alcanzado:</strong> ${alumno.datosAcademicos.nivelAlcanzado}</p>
+                    <p class="mb-1"><strong>Idiomas Estudiados:</strong> ${alumno.datosAcademicos.idiomasEstudiados.join(', ')}</p>
+                    <p class="mb-1"><strong>Nivel Solicitado:</strong> ${alumno.datosAcademicos.nivelSolicitado}</p>
+                </div>
+
+                <div class="alert alert-danger py-2"><i class="fas fa-heartbeat"></i> <strong>5. Información Médica</strong></div>
+                <div class="ps-3 mb-3">
+                    <p class="mb-1"><strong>Alergias:</strong> ${alumno.informacionMedica.alergias.length > 0 ? alumno.informacionMedica.alergias.join(', ') : 'Ninguna'}</p>
+                    <p class="mb-1"><strong>Medicación:</strong> ${alumno.informacionMedica.medicacionActual || 'No indica'}</p>
+                </div>
             </div>
         `;
         document.getElementById('resumenContenido').innerHTML = html;
