@@ -14,10 +14,10 @@ export class DataService {
             if (!respuesta.ok) throw new Error('Error en la respuesta de la API');
 
             this.datosJSON = await respuesta.json();
-            console.log('✅ Datos cargados desde la API correctamente');
+            console.log('Datos cargados desde la API correctamente');
             return this.datosJSON;
         } catch (error) {
-            console.error('❌ Error al cargar datos de la API:', error);
+            console.error('Error al cargar datos de la API:', error);
             throw error;
         }
     }
