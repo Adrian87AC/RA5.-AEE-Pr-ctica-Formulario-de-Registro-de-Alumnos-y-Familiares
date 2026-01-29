@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro de Alumnos</title>
+
+    <!-- Bootstrap CSS para estilos modernos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Nuestros estilos personalizados -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <!-- Contenedor principal -->
+    <div class="container my-5">
+        <!-- Cabecera -->
+        <header class="text-center mb-5">
+            <h1 class="display-4">
+                <i class="fas fa-user-graduate text-primary"></i>
+                Formulario de Registro de Alumnos
+            </h1>
+            <p class="lead text-muted">Complete todos los campos obligatorios marcados con *</p>
+        </header>
+
+        <!-- Formulario principal -->
+        <form id="formularioAlumno" novalidate>
+
+            <!-- ============================================================ -->
+            <!-- SECCIÓN 1: DATOS DEL ALUMNO -->
+            <!-- ============================================================ -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user"></i>
+                        1. Datos del Alumno
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombreAlumno" class="form-label">Nombre *</label>
+                            <input type="text" class="form-control" id="nombreAlumno" placeholder="Ej: Juan" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="apellidosAlumno" class="form-label">Apellidos *</label>
+                            <input type="text" class="form-control" id="apellidosAlumno" placeholder="Ej: García López"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="nifAlumno" class="form-label">NIF *</label>
+                            <input type="text" class="form-control" id="nifAlumno" placeholder="Ej: 12345678A"
+                                maxlength="9" required>
+                            <div class="invalid-feedback">
+                                El NIF debe tener 8 dígitos seguidos de una letra válida.
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="lenguaAlumno" class="form-label">Lengua Materna *</label>
+                            <select class="form-select" id="lenguaAlumno" required>
+                                <option value="">Selecciona una opción</option>
+                                <!-- Se carga dinámicamente desde JSON -->
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Idiomas Conocidos *</label>
+                            <div id="idiomasAlumno" class="idiomas-container">
+                                <!-- Se cargan dinámicamente desde JSON -->
+                            </div>
+                            <small class="text-muted">Selecciona al menos uno</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECCIÓN 2: FAMILIARES ASOCIADOS -->
+            <!-- ============================================================ -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="fas fa-users"></i>
+                        2. Familiares Asociados
+                    </h3>
+                    <button type="button" class="btn btn-light btn-sm" id="btnAgregarFamiliar">
+                        <i class="fas fa-plus"></i> Añadir Familiar
+                    </button>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        <i class="fas fa-info-circle"></i>
+                        Debe registrar al menos un familiar.
+                    </p>
+
+                    <!-- Contenedor de familiares -->
+                    <div id="familiares-container">
+                        <!-- Primer familiar (por defecto) -->
+                        <div class="familiar-item card mb-3" id="familiar0">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Familiar 1</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Nombre *</label>
+                                        <input type="text" class="form-control" id="nombreFamiliar0" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Apellidos *</label>
+                                        <input type="text" class="form-control" id="apellidosFamiliar0" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">NIF *</label>
+                                        <input type="text" class="form-control" id="nifFamiliar0" maxlength="9"
+                                            required>
+                                        <div class="invalid-feedback">NIF inválido</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Profesión *</label>
+                                        <select class="form-select" id="profesionFamiliar0" required>
+                                            <option value="">Selecciona una opción</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Ciudad de Nacimiento *</label>
+                                        <select class="form-select" id="ciudadNacimientoFamiliar0" required>
+                                            <option value="">Selecciona una opción</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Lengua Materna *</label>
+                                        <select class="form-select" id="lenguaFamiliar0" required>
+                                            <option value="">Selecciona una opción</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label">Idiomas Conocidos *</label>
+                                        <div id="idiomasFamiliar0" class="idiomas-container">
+                                            <!-- Se cargan dinámicamente -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECCIÓN 3: DIRECCIÓN ACTUAL -->
+            <!-- ============================================================ -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-map-marker-alt"></i>
+                        3. Dirección Actual
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="pais" class="form-label">País *</label>
+                            <select class="form-select" id="pais" required>
+                                <option value="">Selecciona un país</option>
+                                <!-- Se carga dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="ciudad" class="form-label">Ciudad *</label>
+                            <select class="form-select" id="ciudad" required>
+                                <option value="">Primero selecciona un país</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="poblacion" class="form-label">Población *</label>
+                            <select class="form-select" id="poblacion" required>
+                                <option value="">Primero selecciona una ciudad</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="direccionCompleta" class="form-label">Dirección Completa *</label>
+                            <input type="text" class="form-control" id="direccionCompleta"
+                                placeholder="Ej: Calle Mayor, 25, 3º B" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="codigoPostal" class="form-label">Código Postal *</label>
+                            <input type="text" class="form-control" id="codigoPostal" placeholder="Ej: 28001"
+                                maxlength="5" required>
+                            <div class="invalid-feedback">
+                                El código postal debe tener 5 dígitos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECCIÓN 4: DATOS ACADÉMICOS -->
+            <!-- ============================================================ -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">
+                        <i class="fas fa-graduation-cap"></i>
+                        4. Datos Académicos
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="colegioProcedencia" class="form-label">Colegio de Procedencia *</label>
+                            <input type="text" class="form-control" id="colegioProcedencia"
+                                placeholder="Nombre del colegio anterior" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nivelAlcanzado" class="form-label">Nivel de Estudios Alcanzado *</label>
+                            <select class="form-select" id="nivelAlcanzado" required>
+                                <option value="">Selecciona una opción</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Idiomas Estudiados *</label>
+                            <div id="idiomasEstudiados" class="idiomas-container">
+                                <!-- Se cargan dinámicamente -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nivelSolicitado" class="form-label">Nivel de Estudio Solicitado *</label>
+                            <select class="form-select" id="nivelSolicitado" required>
+                                <option value="">Selecciona una opción</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- SECCIÓN 5: INFORMACIÓN MÉDICA -->
+            <!-- ============================================================ -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-heartbeat"></i>
+                        5. Información Médica
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">
+                        <i class="fas fa-info-circle"></i>
+                        Esta sección es opcional pero recomendada.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alergias (opcional)</label>
+                            <div id="alergias" class="idiomas-container">
+                                <!-- Se cargan dinámicamente -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="medicacion" class="form-label">Medicación Actual (opcional)</label>
+                            <textarea class="form-control" id="medicacion" rows="4"
+                                placeholder="Indique cualquier medicación que tome regularmente"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- BOTÓN DE ENVÍO -->
+            <!-- ============================================================ -->
+            <div class="text-center mb-5">
+                <button type="submit" class="btn btn-primary btn-lg px-5">
+                    <i class="fas fa-check-circle"></i>
+                    Registrar Alumno
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MODAL PARA MOSTRAR EL RESUMEN -->
+    <!-- ============================================================ -->
+    <div class="modal fade" id="resumenModal" tabindex="-1" aria-labelledby="resumenModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="resumenModalLabel">
+                        <i class="fas fa-clipboard-check"></i>
+                        Resumen del Registro
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="resumenContenido">
+                        <!-- Aquí se insertará el resumen dinámicamente -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCRIPTS -->
+    <!-- ============================================================ -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Nuestro JavaScript modular -->
+    <script type="module" src="src/app.js"></script>
+</body>
+
+</html>
