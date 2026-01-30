@@ -6,16 +6,24 @@ import { DatosAcademicos } from './models/DatosAcademicos.js';
 import { InformacionMedica } from './models/InformacionMedica.js';
 import { validarNIF, validarCodigoPostal, obtenerValoresSeleccionados } from './utils/Validators.js';
 
+/**
+ * Clase principal de la aplicación que gestiona la lógica del formulario,
+ * eventos y comunicación con el DataService.
+ */
 class App {
     constructor() {
         this.dataService = new DataService();
-        this.contadorFamiliares = 1;
+        this.contadorFamiliares = 1; // Control para IDs únicos de familiares
         this.init();
     }
 
+    /**
+     * Inicialización asíncrona de la aplicación.
+     * Carga datos iniciales y configura la interfaz.
+     */
     async init() {
         try {
-            await this.dataService.cargarDatos();
+            await this.dataService.cargarDatos(); // Recupera datos (países, idiomas, etc.) del backend
             this.inicializarDesplegables();
             this.configurarEventListeners();
             console.log('🚀 Aplicación iniciada y configurada');
@@ -24,32 +32,48 @@ class App {
         }
     }
 
+    /**
+     * Rellena todos los select y contenedores de opciones múltiples
+     * con los datos obtenidos del servidor.
+     */
     inicializarDesplegables() {
         const data = this.dataService.datosJSON;
 
+        // Carga de opciones para Alumno
         this.dataService.cargarOpciones('lenguaAlumno', data.lenguas);
         this.dataService.cargarOpcionesMultiples('idiomasAlumno', data.idiomas);
 
+        // Carga de opciones para el primer Familiar (índice 0)
         this.dataService.cargarOpciones('profesionFamiliar0', data.profesiones);
         this.dataService.cargarOpciones('lenguaFamiliar0', data.lenguas);
         this.dataService.cargarOpcionesMultiples('idiomasFamiliar0', data.idiomas);
 
+        // Carga de geografía
         this.dataService.cargarPaises();
         this.dataService.cargarOpciones('ciudadNacimientoFamiliar0', this.dataService.getTodasLasCiudades());
 
+        // Carga de datos académicos y médicos
         this.dataService.cargarOpciones('nivelAlcanzado', data.nivelesEstudio);
         this.dataService.cargarOpciones('nivelSolicitado', data.nivelesEstudio);
         this.dataService.cargarOpcionesMultiples('idiomasEstudiados', data.idiomas);
         this.dataService.cargarOpcionesMultiples('alergias', data.alergias);
     }
 
+    /**
+     * Registra los manejadores de eventos para los elementos interactivos del DOM.
+     */
     configurarEventListeners() {
+        // Eventos de geografía dinámica
         document.getElementById('pais').addEventListener('change', () => this.cargarCiudades());
         document.getElementById('ciudad').addEventListener('change', () => this.cargarPoblaciones());
+
+        // Evento para añadir dinámicamente secciones de familiares
         document.getElementById('btnAgregarFamiliar').addEventListener('click', () => this.agregarFamiliar());
+
+        // Manejo del envío del formulario
         document.getElementById('formularioAlumno').addEventListener('submit', (e) => this.validarFormulario(e));
 
-        // Delegación de eventos para eliminar familiares
+        // Delegación de eventos para eliminar familiares (ya que se crean dinámicamente)
         document.getElementById('familiares-container').addEventListener('click', (e) => {
             if (e.target.classList.contains('btn-eliminar-familiar')) {
                 const id = e.target.getAttribute('data-id');
@@ -58,6 +82,9 @@ class App {
         });
     }
 
+    /**
+     * Filtra y carga ciudades según el país seleccionado.
+     */
     cargarCiudades() {
         const pais = document.getElementById('pais').value;
         const selectCiudad = document.getElementById('ciudad');
@@ -74,6 +101,9 @@ class App {
         selectPoblacion.innerHTML = '<option value="">Primero selecciona una ciudad</option>';
     }
 
+    /**
+     * Filtra y carga poblaciones según la ciudad seleccionada.
+     */
     cargarPoblaciones() {
         const pais = document.getElementById('pais').value;
         const ciudad = document.getElementById('ciudad').value;
@@ -88,6 +118,9 @@ class App {
         this.dataService.cargarOpciones('poblacion', poblaciones);
     }
 
+    /**
+     * Inyecta dinámicamente un bloque HTML para un nuevo familiar en el contenedor.
+     */
     agregarFamiliar() {
         const contenedor = document.getElementById('familiares-container');
         const id = this.contadorFamiliares;
@@ -113,6 +146,7 @@ class App {
                         <input type="text" class="form-control" id="apellidosFamiliar${id}" required>
                     </div>
                 </div>
+                <!-- ... campos adicionales de familiar omitidos para brevedad en comentarios ... -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">NIF *</label>
@@ -145,6 +179,7 @@ class App {
 
         contenedor.appendChild(div);
 
+        // Rellenar dinámicamente los campos del nuevo familiar
         const data = this.dataService.datosJSON;
         this.dataService.cargarOpciones(`profesionFamiliar${id}`, data.profesiones);
         this.dataService.cargarOpciones(`lenguaFamiliar${id}`, data.lenguas);
@@ -154,6 +189,10 @@ class App {
         this.contadorFamiliares++;
     }
 
+    /**
+     * Elimina el bloque de un familiar del DOM.
+     * @param {string} id ID del familiar a eliminar.
+     */
     eliminarFamiliar(id) {
         const familiares = document.querySelectorAll('.familiar-item');
         if (familiares.length <= 1) {
@@ -163,12 +202,15 @@ class App {
         document.getElementById(`familiar${id}`).remove();
     }
 
+    /**
+     * Orquestador de la validación del formulario y envío de datos.
+     */
     validarFormulario(event) {
         event.preventDefault();
         let esValido = true;
         let errores = [];
 
-        // Validación Alumno
+        // --- 1. Validación de Datos del Alumno ---
         const nombre = document.getElementById('nombreAlumno').value.trim();
         const nif = document.getElementById('nifAlumno').value.trim();
         if (!nombre) { esValido = false; errores.push('Nombre alumno obligatorio'); }
@@ -180,7 +222,7 @@ class App {
             document.getElementById('nifAlumno').classList.remove('is-invalid');
         }
 
-        // Validación Familiares
+        // --- 2. Validación y Procesamiento de Familiares ---
         const familiaresItems = document.querySelectorAll('.familiar-item');
         const familiaresValidos = [];
 
@@ -199,6 +241,7 @@ class App {
             }
 
             if (esValido) {
+                // Instanciamos y poblamos el modelo Familiar
                 const fam = new Familiar();
                 fam.nombre = nomFam;
                 fam.apellidos = document.getElementById(`apellidosFamiliar${id}`).value.trim();
@@ -211,7 +254,7 @@ class App {
             }
         });
 
-        // Validación Dirección
+        // --- 3. Validación de Dirección ---
         const cp = document.getElementById('codigoPostal').value.trim();
         if (!validarCodigoPostal(cp)) {
             esValido = false;
@@ -221,12 +264,13 @@ class App {
             document.getElementById('codigoPostal').classList.remove('is-invalid');
         }
 
+        // Si hay errores, detenemos el proceso
         if (!esValido) {
             alert('Errores:\n' + errores.join('\n'));
             return;
         }
 
-        // Construcción del objeto final
+        // --- 4. Construcción del Objeto Alumno mediante el Builder ---
         const builder = new AlumnoBuilder();
         builder
             .setNombre(nombre)
@@ -235,6 +279,7 @@ class App {
             .setLenguaMaterna(document.getElementById('lenguaAlumno').value)
             .setIdiomasConocidos(obtenerValoresSeleccionados('idiomasAlumno'));
 
+        // Configuración de la dirección
         const dir = new Direccion();
         dir.pais = document.getElementById('pais').value;
         dir.ciudad = document.getElementById('ciudad').value;
@@ -243,6 +288,7 @@ class App {
         dir.codigoPostal = cp;
         builder.setDireccion(dir);
 
+        // Configuración de datos académicos
         const academico = new DatosAcademicos();
         academico.colegioProcedencia = document.getElementById('colegioProcedencia').value.trim();
         academico.nivelAlcanzado = document.getElementById('nivelAlcanzado').value;
@@ -250,17 +296,20 @@ class App {
         academico.nivelSolicitado = document.getElementById('nivelSolicitado').value;
         builder.setDatosAcademicos(academico);
 
+        // Configuración de información médica
         const medico = new InformacionMedica();
         medico.alergias = obtenerValoresSeleccionados('alergias');
         medico.medicacionActual = document.getElementById('medicacion').value.trim();
         builder.setInformacionMedica(medico);
 
+        // Asociación de familiares procesados
         familiaresValidos.forEach(f => builder.addFamiliar(f));
 
+        // Generación del objeto final Alumno
         const alumno = builder.build();
         console.log('🎓 Objeto alumno construido:', alumno);
 
-        // Enviar al servidor
+        // --- 5. Envío al Servidor mediante el DataService ---
         this.dataService.registrarAlumno(alumno)
             .then(resultado => {
                 console.log('✅ Servidor respondió:', resultado);
@@ -274,6 +323,10 @@ class App {
             });
     }
 
+    /**
+     * Muestra un modal de Bootstrap con el desglose completo del alumno registrado.
+     * @param {Alumno} alumno Instancia del alumno construido.
+     */
     mostrarResumenModal(alumno) {
         let html = `
             <div class="resumen-container">
@@ -324,5 +377,5 @@ class App {
     }
 }
 
-// Inicializar la app
+// Punto de entrada: Inicialización de la aplicación
 new App();
